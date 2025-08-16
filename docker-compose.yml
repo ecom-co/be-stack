@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    extends:
+      file: ./services/postgres/docker-compose.yml
+      service: postgres
+
+  # Redis Cache
+  redis:
+    extends:
+      file: ./services/redis/docker-compose.yml
+      service: redis
+
+  # RabbitMQ
+  rabbitmq:
+    extends:
+      file: ./services/rabbitmq/docker-compose.yml
+      service: rabbitmq
+
+  # Elasticsearch
+  elasticsearch:
+    extends:
+      file: ./services/elasticsearch/docker-compose.yml
+      service: elasticsearch
+
+  # Kibana
+  kibana:
+    extends:
+      file: ./services/kibana/docker-compose.yml
+      service: kibana
+
+  # PgAdmin
+  pgadmin:
+    extends:
+      file: ./services/pgadmin/docker-compose.yml
+      service: pgadmin
+
+volumes:
+  ecom_postgres_data:
+    driver: local
+  ecom_redis_data:
+    driver: local
+  ecom_rabbitmq_data:
+    driver: local
+  ecom_pgadmin_data:
+    driver: local
+  ecom_elasticsearch_data:
+    driver: local
+
+networks:
+  ecom-network:
+    driver: bridge

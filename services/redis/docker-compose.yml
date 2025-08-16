@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: ecom-redis
+    restart: unless-stopped
+    command: redis-server /usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_ADMIN_PASSWORD=${REDIS_ADMIN_PASSWORD}
+      - REDIS_DEV_PASSWORD=${REDIS_DEV_PASSWORD}
+    ports:
+      - '6390:6379'
+    volumes:
+      - ecom_redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - ecom-network
+    healthcheck:
+      test: ['CMD', 'redis-cli', '-a', '${REDIS_ADMIN_PASSWORD}', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  ecom_redis_data:
+    external: true
+
+networks:
+  ecom-network:
+    external: true

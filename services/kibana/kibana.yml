@@ -1,0 +1,12 @@
+# Kibana configuration
+server.host: 0.0.0.0
+server.port: 5601
+server.name: ecommerce-kibana
+
+# Elasticsearch configuration
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+
+# Logging
+logging.appenders.console.type: console
+logging.appenders.console.layout.type: json
+logging.root.level: info

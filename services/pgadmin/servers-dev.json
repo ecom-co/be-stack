@@ -1,0 +1,22 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Ecommerce DB (Admin)",
+      "Group": "🔴 Admin Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "ecommerce_db",
+      "Username": "admin_ecom",
+      "SSLMode": "prefer"
+    },
+    "2": {
+      "Name": "Ecommerce DB (Developer)",
+      "Group": "🟢 Developer Servers", 
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "ecommerce_db",
+      "Username": "dev_ecom",
+      "SSLMode": "prefer"
+    }
+  }
+}
