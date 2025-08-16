@@ -1,39 +1,39 @@
 services:
   # PostgreSQL Database
-  postgres:
+  ecom-postgres:
     extends:
       file: ./services/postgres/docker-compose.yml
-      service: postgres
+      service: ecom-postgres
 
   # Redis Cache
-  redis:
+  ecom-redis:
     extends:
       file: ./services/redis/docker-compose.yml
-      service: redis
+      service: ecom-redis
 
   # RabbitMQ
-  rabbitmq:
+  ecom-rabbitmq:
     extends:
       file: ./services/rabbitmq/docker-compose.yml
-      service: rabbitmq
+      service: ecom-rabbitmq
 
   # Elasticsearch
-  elasticsearch:
+  ecom-elasticsearch:
     extends:
       file: ./services/elasticsearch/docker-compose.yml
-      service: elasticsearch
+      service: ecom-elasticsearch
 
   # Kibana
-  kibana:
+  ecom-kibana:
     extends:
       file: ./services/kibana/docker-compose.yml
-      service: kibana
+      service: ecom-kibana
 
   # PgAdmin
-  pgadmin:
+  ecom-pgadmin:
     extends:
       file: ./services/pgadmin/docker-compose.yml
-      service: pgadmin
+      service: ecom-pgadmin
 
 volumes:
   ecom_postgres_data:
@@ -49,4 +49,4 @@ volumes:
 
 networks:
   ecom-network:
-    driver: bridge
+    external: true

@@ -12,7 +12,7 @@ retry_count=0
 max_retries=24
 
 # Use elasticsearch hostname since we're in different container
-ES_HOST="${ES_HOST:-elasticsearch:9200}"
+ES_HOST="${ES_HOST:-ecom-elasticsearch:9200}"
 
 while [ $retry_count -lt $max_retries ]; do
   echo "Attempt $((retry_count + 1))/$max_retries - checking Elasticsearch health..."

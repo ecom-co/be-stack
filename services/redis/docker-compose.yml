@@ -1,5 +1,5 @@
 services:
-  redis:
+  ecom-redis:
     image: redis:7-alpine
     container_name: ecom-redis
     restart: unless-stopped

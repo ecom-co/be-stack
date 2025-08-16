@@ -1,5 +1,5 @@
 services:
-  postgres:
+  ecom-postgres:
     build:
       context: .
       dockerfile: Dockerfile

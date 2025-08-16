@@ -1,5 +1,5 @@
 services:
-  elasticsearch:
+  ecom-elasticsearch:
     build:
       context: .
       dockerfile: Dockerfile

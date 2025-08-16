@@ -1,18 +1,18 @@
 services:
-  kibana:
+  ecom-kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
     container_name: ecom-kibana
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_ADMIN_PASSWORD}
-      - ELASTICSEARCH_ADMIN_PASSWORD=${ELASTICSEARCH_ADMIN_PASSWORD}
+      ELASTICSEARCH_HOSTS: "http://ecom-elasticsearch:9200"
+      ELASTICSEARCH_USERNAME: kibana_system
+      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_ADMIN_PASSWORD}
+      ELASTICSEARCH_ADMIN_PASSWORD: ${ELASTICSEARCH_ADMIN_PASSWORD}
     ports:
       - '5602:5601'
     volumes:
       - ./kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     depends_on:
-      - elasticsearch
+      - ecom-elasticsearch
     networks:
       - ecom-network
 

@@ -1,5 +1,5 @@
 services:
-  rabbitmq:
+  ecom-rabbitmq:
     image: rabbitmq:4.1-management-alpine
     container_name: ecom-rabbitmq
     restart: unless-stopped
