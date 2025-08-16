@@ -1,8 +1,8 @@
-version: '3.8'
-
 services:
   postgres:
-    image: postgres:16-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: ecom-postgres
     restart: unless-stopped
     environment:
@@ -15,7 +15,6 @@ services:
       - '5443:5432'
     volumes:
       - ecom_postgres_data:/var/lib/postgresql/data
-      - ./init:/docker-entrypoint-initdb.d:ro
     networks:
       - ecom-network
     healthcheck:

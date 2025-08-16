@@ -52,9 +52,17 @@ else
     echo -e "${RED}❌ Failed${NC}"
 fi
 
-# Test Elasticsearch
-echo -n "🔍 Elasticsearch: "
-if curl -s http://localhost:9201/_cluster/health > /dev/null 2>&1; then
+# Test Elasticsearch Admin
+echo -n "🔍 Elasticsearch (Admin): "
+if curl -s -u elastic:$ELASTICSEARCH_ADMIN_PASSWORD http://localhost:9201/_cluster/health > /dev/null 2>&1; then
+    echo -e "${GREEN}✅ Connected${NC}"
+else
+    echo -e "${RED}❌ Failed${NC}"
+fi
+
+# Test Elasticsearch Developer
+echo -n "🔍 Elasticsearch (Developer): "
+if curl -s -u dev_ecom:$ELASTICSEARCH_DEV_PASSWORD http://localhost:9201/_cluster/health > /dev/null 2>&1; then
     echo -e "${GREEN}✅ Connected${NC}"
 else
     echo -e "${RED}❌ Failed${NC}"

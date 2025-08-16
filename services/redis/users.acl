@@ -1,0 +1,3 @@
+user default off
+user admin_ecom on >AdminCache2025 ~* +@all
+user dev_ecom on >DevCache2025 ~* +@read +@write +@list +ping

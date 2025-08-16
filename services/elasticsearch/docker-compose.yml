@@ -1,12 +1,15 @@
-version: '3.8'
-
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: ecom-elasticsearch
     environment:
       - discovery.type=single-node
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_ADMIN_PASSWORD}
+      - ELASTICSEARCH_ADMIN_PASSWORD=${ELASTICSEARCH_ADMIN_PASSWORD}
+      - ELASTICSEARCH_DEV_PASSWORD=${ELASTICSEARCH_DEV_PASSWORD}
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ulimits:
       memlock:
@@ -14,13 +17,12 @@ services:
         hard: -1
     volumes:
       - ecom_elasticsearch_data:/usr/share/elasticsearch/data
-      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
       - '9201:9200'
     networks:
       - ecom-network
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:9200/_cluster/health']
+      test: ['CMD', 'curl', '-u', 'elastic:${ELASTICSEARCH_ADMIN_PASSWORD}', '-f', 'http://localhost:9200/_cluster/health']
       interval: 30s
       timeout: 10s
       retries: 5

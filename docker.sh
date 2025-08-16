@@ -141,8 +141,12 @@ case "$1" in
         print_status "Seeding development data..."
         ./scripts/seed-data.sh
         ;;
+    "setup-es")
+        print_status "Setting up Elasticsearch users..."
+        ./setup-elasticsearch-users.sh
+        ;;
     *)
-        echo "Usage: $0 {up|down|restart|logs|status|clean|test|seed}"
+        echo "Usage: $0 {up|down|restart|logs|status|clean|test|seed|setup-es}"
         echo ""
         echo "Commands:"
         echo "  up/start    - Start all services"
@@ -153,9 +157,11 @@ case "$1" in
         echo "  clean       - Clean all Docker containers, images, and volumes"
         echo "  test        - Test all service connections"
         echo "  seed        - Seed development data"
+        echo "  setup-es    - Setup Elasticsearch users"
         echo ""
         echo "Examples:"
         echo "  $0 up"
+        echo "  $0 setup-es"
         echo "  $0 test"
         echo "  $0 seed"
         echo "  $0 logs postgres"

@@ -1,0 +1,33 @@
+{
+  "vhosts": [
+    { "name": "ecommerce" }
+  ],
+  "users": [
+    {
+      "name": "dev_ecom",
+      "password": "DevQueue2025",
+      "tags": "monitoring"
+    },
+    {
+      "name": "admin_ecom",
+      "password": "AdminQueue2025",
+      "tags": "administrator"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "dev_ecom",
+      "vhost": "ecommerce",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "admin_ecom",
+      "vhost": "ecommerce",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# main - simple docker stack manager for ecom-be-stack
+# Usage: ./main up [services...]    # services optional, default: all
+#        ./main down
+#        ./main ps
+#        ./main logs [service]
+#        ./main restart [services...]
+
+ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT_DIR"
+
+# collect compose files: root plus docker-compose.*.yml under subfolders
+compose_files=("docker-compose.yml")
+while IFS= read -r -d $'\0' f; do
+  rel="${f#./}"
+  compose_files+=("$rel")
+done < <(find . -maxdepth 2 -type f -name 'docker-compose.*.yml' -not -name 'docker-compose.yml' -print0)
+
+run_compose() {
+  local cmd=(docker compose)
+  for f in "${compose_files[@]}"; do
+    cmd+=( -f "$f" )
+  done
+  echo "Running: ${cmd[*]} $*"
+  # use array execution to preserve args
+  "${cmd[@]}" "$@"
+}
+
+case ${1:-} in
+  up)
+    shift || true
+    # allow passing specific service names to start (default: all)
+    if [ $# -eq 0 ]; then
+      run_compose up -d --build
+    else
+      run_compose up -d --build "$@"
+    fi
+    ;;
+  down)
+    shift || true
+    run_compose down
+    ;;
+  ps)
+    shift || true
+    run_compose ps
+    ;;
+  logs)
+    shift || true
+    if [ $# -eq 0 ]; then
+      run_compose logs -f
+    else
+      run_compose logs -f "$@"
+    fi
+    ;;
+  restart)
+    shift || true
+    if [ $# -eq 0 ]; then
+      run_compose restart
+    else
+      run_compose restart "$@"
+    fi
+    ;;
+  *)
+    cat <<'USAGE'
+Usage: main <command>
+Commands:
+  up [services...]     Start whole stack or listed services
+  down                 Stop stack
+  ps                   List containers in this compose project
+  logs [service]       Follow logs (all if no service)
+  restart [services]   Restart services
+USAGE
+    exit 1
+    ;;
+esac

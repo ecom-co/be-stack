@@ -87,7 +87,9 @@ echo "✅ Redis seeded with sample cache data!"
 
 # Create sample Elasticsearch index
 echo "🔍 Creating Elasticsearch product index..."
-curl -X PUT "localhost:9201/products" -H 'Content-Type: application/json' -d'
+curl -X PUT "localhost:9201/products" \
+  -u dev_ecom:$ELASTICSEARCH_DEV_PASSWORD \
+  -H 'Content-Type: application/json' -d'
 {
   "mappings": {
     "properties": {
@@ -101,7 +103,9 @@ curl -X PUT "localhost:9201/products" -H 'Content-Type: application/json' -d'
 }'
 
 # Index sample products
-curl -X POST "localhost:9201/products/_doc/1" -H 'Content-Type: application/json' -d'
+curl -X POST "localhost:9201/products/_doc/1" \
+  -u dev_ecom:$ELASTICSEARCH_DEV_PASSWORD \
+  -H 'Content-Type: application/json' -d'
 {
   "name": "Laptop Pro",
   "description": "High-performance laptop for professionals",
@@ -110,7 +114,9 @@ curl -X POST "localhost:9201/products/_doc/1" -H 'Content-Type: application/json
   "tags": ["laptop", "computer", "professional"]
 }'
 
-curl -X POST "localhost:9201/products/_doc/2" -H 'Content-Type: application/json' -d'
+curl -X POST "localhost:9201/products/_doc/2" \
+  -u dev_ecom:$ELASTICSEARCH_DEV_PASSWORD \
+  -H 'Content-Type: application/json' -d'
 {
   "name": "Wireless Headphones",
   "description": "Premium noise-canceling headphones",
