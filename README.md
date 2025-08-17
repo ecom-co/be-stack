@@ -82,6 +82,7 @@ This folder contains the local infrastructure used by the backend during develop
 Quick summary
 - Top-level compose: `docker-compose.yml` (references `services/*`)
 - Per-service definitions: `services/*/docker-compose.yml`
+- Project name: `ecom` (containers will be named `ecom-postgres`, `ecom-redis`, etc.)
 - Shared network: `ecom-network` (recommended to be external so multiple compose projects can share it)
 
 Quick start
