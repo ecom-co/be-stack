@@ -1,38 +1,64 @@
 #!/bin/bash
+set -e
 
-# This script runs Elasticsearch and auto-creates users when ready
+echo "🚀 Starting Elasticsearch with custom user setup..."
+
+# Function to log with timestamp
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
+}
 
 # Start Elasticsearch in background
-echo "Starting Elasticsearch..."
+log "Starting Elasticsearch server..."
+
+# Use the original Elasticsearch entrypoint in background
 /usr/local/bin/docker-entrypoint.sh elasticsearch &
 ES_PID=$!
 
-# Wait and setup users with health check
-(
-    echo "Waiting for Elasticsearch to be ready..."
-    
-    # Wait for ES to be healthy
-    retry_count=0
-    max_retries=30
-    
-    while [ $retry_count -lt $max_retries ]; do
-        echo "Health check attempt $((retry_count + 1))/$max_retries..."
-        
-        if curl -s -u "elastic:${ELASTICSEARCH_ADMIN_PASSWORD}" "http://localhost:9200/_cluster/health" | grep -q '"status":"green\|yellow"'; then
-            echo "✅ Elasticsearch is ready! Running user setup..."
-            /usr/share/elasticsearch/setup-users.sh || echo "⚠️ User setup failed or already completed"
-            break
-        fi
-        
-        sleep 5
-        retry_count=$((retry_count + 1))
-    done
-    
-    if [ $retry_count -ge $max_retries ]; then
-        echo "❌ Timeout waiting for Elasticsearch to be ready"
-    fi
-) &
+# Wait for Elasticsearch to be ready
+log "Waiting for Elasticsearch to be ready..."
+timeout=180
+counter=0
 
-# Wait for Elasticsearch main process
-echo "Waiting for Elasticsearch main process..."
+while [ $counter -lt $timeout ]; do
+    # Check if Elasticsearch is responding
+    if curl -s -f "http://localhost:9200" >/dev/null 2>&1; then
+        log "✅ Elasticsearch is ready (no security)!"
+        break
+    elif curl -s -o /dev/null -w "%{http_code}" "http://localhost:9200" 2>/dev/null | grep -q "401"; then
+        log "✅ Elasticsearch is ready (security enabled)!"
+        break
+    fi
+    
+    # Check if the process is still running
+    if ! kill -0 $ES_PID 2>/dev/null; then
+        log "❌ Elasticsearch process died"
+        exit 1
+    fi
+    
+    sleep 2
+    counter=$((counter + 2))
+done
+
+if [ $counter -ge $timeout ]; then
+    log "❌ Timeout waiting for Elasticsearch to start"
+    exit 1
+fi
+
+# Run user setup script
+log "Running user setup script..."
+if [ -f "/usr/share/elasticsearch/setup-users.sh" ]; then
+    bash /usr/share/elasticsearch/setup-users.sh
+    if [ $? -eq 0 ]; then
+        log "✅ User setup completed successfully"
+    else
+        log "⚠️ User setup had issues, but continuing..."
+    fi
+else
+    log "⚠️ Setup script not found, skipping user setup"
+fi
+
+log "🎉 Elasticsearch startup complete!"
+
+# Keep the main process running
 wait $ES_PID

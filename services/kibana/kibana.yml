@@ -4,9 +4,9 @@ server.port: 5601
 server.name: ecommerce-kibana
 
 # Elasticsearch configuration
-elasticsearch.hosts: ["http://elasticsearch:9200"]
-elasticsearch.username: "kibana_system"
-elasticsearch.password: "${ELASTICSEARCH_ADMIN_PASSWORD}"
+elasticsearch.hosts: ["http://ecom-elasticsearch:9200"]
+elasticsearch.username: "${ELASTICSEARCH_KIBANA_USER}"
+elasticsearch.password: "${ELASTICSEARCH_KIBANA_PASSWORD}"
 
 # Logging
 logging.appenders.console.type: console
