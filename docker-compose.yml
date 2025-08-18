@@ -1,6 +1,12 @@
 name: ecom
 
 services:
+  # 🔧 Init Container for All Services Setup
+  ecom-init:
+    extends:
+      file: ./services/init/docker-compose.yml
+      service: ecom-init
+
   # PostgreSQL Database
   ecom-postgres:
     extends:

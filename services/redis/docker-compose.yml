@@ -3,7 +3,6 @@ services:
     image: redis:7-alpine
     container_name: ecom-redis
     restart: unless-stopped
-    command: ["redis-server", "/etc/redis/redis.conf"]
     environment:
       - REDIS_ADMIN_PASSWORD=${REDIS_ADMIN_PASSWORD}
       - REDIS_DEV_PASSWORD=${REDIS_DEV_PASSWORD}
@@ -11,12 +10,10 @@ services:
       - '6390:6379'
     volumes:
       - ecom_redis_data:/data
-      - ./redis.conf:/etc/redis/redis.conf:ro
-      - ./users.acl:/etc/redis/users.acl:ro
     networks:
       - ecom-network
     healthcheck:
-      test: ['CMD', 'redis-cli', '-a', '${REDIS_ADMIN_PASSWORD}', 'ping']
+      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD}', 'ping']
       interval: 10s
       timeout: 3s
       retries: 5

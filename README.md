@@ -1,54 +1,50 @@
-# E-commerce Backend Stack
+# 🎯 E-commerce Backend Stack
 
-A comprehensive development environment for the e-commerce platform, providing all necessary infrastructure services.
+Production-ready backend infrastructure with automated initialization using **Init Container Pattern**.
 
-## 🏗️ Project Structure
+## 🏗️ Architecture
 
-```
-ecom-be-stack/
-├── docker-compose.yml            # Top-level orchestration
-├── .env                         # Environment variables (copy from .env.example)
-├── .env.example                 # Template with placeholder credentials
-├── services/                    # Individual service configurations
-│   ├── postgres/
-│   │   ├── docker-compose.yml
-│   │   ├── Dockerfile
-│   │   └── init/                 # Database initialization scripts
-│   ├── redis/
-│   │   ├── docker-compose.yml
-│   │   ├── redis.conf
-│   │   └── users.acl
-│   ├── rabbitmq/
-│   │   ├── docker-compose.yml
-│   │   ├── rabbitmq.conf
-│   │   └── definitions.json
-│   ├── elasticsearch/
-│   │   ├── docker-compose.yml
-│   │   ├── Dockerfile
-│   │   ├── elasticsearch.yml
-│   │   └── init/                 # User setup and entrypoint scripts
-│   ├── kibana/
-│   │   ├── docker-compose.yml
-│   │   ├── Dockerfile
-│   │   ├── kibana.yml
-│   │   └── init/                 # Kibana initialization scripts
-│   └── pgadmin/
-│       ├── docker-compose.yml
-│       ├── servers-dev.json
-│       └── servers.json
-├── scripts/                     # Utility scripts
-└── README.md
-```
+- **🔧 Init Container**: Automatically sets up users, databases, and configurations
+- **🔍 Elasticsearch**: Search engine with custom users and roles
+- **🐘 PostgreSQL**: Primary database with application schemas
+- **🟥 Redis**: Caching and session storage with ACL users
+- **🐰 RabbitMQ**: Message broker with vhosts and users
+- **📊 Kibana**: Elasticsearch dashboard
+- **🔧 PgAdmin**: PostgreSQL management interface
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Docker & Docker Compose installed
-- At least 4GB RAM available for containers
+### 1. **One-Command Start**
+```bash
+chmod +x manage.sh start.sh
+./manage.sh start
+```
 
-### Setup
-1. **Clone and setup environment:**
-   ```bash
+### 2. **Check Status**
+```bash
+./manage.sh status
+```
+
+### 3. **View Logs**
+```bash
+./manage.sh logs           # All services
+./manage.sh logs-init      # Init container only
+```
+
+### 4. **Auto-Restart Configuration**
+All services are configured with `restart: unless-stopped` policy, which means:
+- ✅ Services automatically restart if they crash
+- ✅ Services automatically start when Docker daemon starts
+- ✅ Services automatically start after system reboot
+- ❌ Services will NOT restart if manually stopped with `docker stop`
+
+**To enable automatic startup after system reboot:**
+```bash
+# Make sure Docker starts on boot (usually already configured)
+sudo systemctl enable docker
+
+# Services will automatically start when Docker starts
+```
    git clone <repository-url>
    cd ecom-be-stack
    cp .env.example .env
@@ -65,18 +61,30 @@ ecom-be-stack/
 
 4. **Start all services:**
    ```bash
+   ./manage.sh start
+   # Or using legacy docker.sh:
    ./docker.sh up
-   # Or manually:
-   docker-compose up -d
    ```
 
 ## 🔧 Service Management
 
-### Using Helper Scripts
+### Using Management Script (Recommended)
+
+**Primary management script:**
+```bash
+./manage.sh start    # Start all services with automatic setup
+./manage.sh stop     # Stop all services
+./manage.sh restart  # Restart all services
+./manage.sh status   # Show service status
+./manage.sh logs     # Follow logs from all services
+./manage.sh clean    # Clean containers/volumes (interactive)
+```
+
+### Legacy Docker Script (Backward Compatibility)
 
 **Linux/macOS:**
 ```bash
-./docker.sh up      # Start all services  
+./docker.sh up      # Start all services (redirects to manage.sh)
 ./docker.sh down    # Stop all services
 ./docker.sh logs    # Follow logs
 ./docker.sh clean   # Clean containers/volumes (interactive)

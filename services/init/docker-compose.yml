@@ -1,0 +1,45 @@
+services:
+  ecom-init:
+    build:
+      context: ../../
+      dockerfile: services/init/Dockerfile
+    container_name: ecom-init
+    volumes:
+      - ecom_elasticsearch_data:/data/elasticsearch
+      - ecom_postgres_data:/data/postgres
+      - ecom_redis_data:/data/redis
+      - ecom_rabbitmq_data:/data/rabbitmq
+    
+    networks:
+      - ecom-network
+    
+    depends_on:
+      ecom-elasticsearch:
+        condition: service_healthy
+      ecom-postgres:
+        condition: service_healthy
+      ecom-redis:
+        condition: service_healthy
+      ecom-rabbitmq:
+        condition: service_healthy
+    
+    restart: "no"  # Run once only
+    
+    environment:
+      - ELASTICSEARCH_ELASTIC_PASSWORD=${ELASTICSEARCH_ELASTIC_PASSWORD}
+      - ELASTICSEARCH_ADMIN_USER=${ELASTICSEARCH_ADMIN_USER}
+      - ELASTICSEARCH_ADMIN_PASSWORD=${ELASTICSEARCH_ADMIN_PASSWORD}
+      - ELASTICSEARCH_KIBANA_PASSWORD=${ELASTICSEARCH_KIBANA_PASSWORD}
+      - ELASTICSEARCH_DEV_USER=${ELASTICSEARCH_DEV_USER}
+      - ELASTICSEARCH_DEV_PASSWORD=${ELASTICSEARCH_DEV_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_ADMIN_USER=${REDIS_ADMIN_USER}
+      - REDIS_ADMIN_PASSWORD=${REDIS_ADMIN_PASSWORD}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_APP_USER=${RABBITMQ_APP_USER}
+      - RABBITMQ_APP_PASSWORD=${RABBITMQ_APP_PASSWORD}
+      - RABBITMQ_VHOST=${RABBITMQ_VHOST}

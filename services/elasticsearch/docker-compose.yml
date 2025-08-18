@@ -1,24 +1,13 @@
 services:
   ecom-elasticsearch:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: elasticsearch:8.11.1
     container_name: ecom-elasticsearch
+    restart: unless-stopped
     environment:
-      # Basic Elasticsearch settings
       - discovery.type=single-node
       - xpack.security.enabled=true
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      
-      # Built-in elastic user password (this is the main one Elasticsearch uses)
       - ELASTIC_PASSWORD=${ELASTICSEARCH_ELASTIC_PASSWORD}
-      
-      # Custom user credentials from .env file
-      - ELASTICSEARCH_ADMIN_USER=${ELASTICSEARCH_ADMIN_USER}
-      - ELASTICSEARCH_ADMIN_PASSWORD=${ELASTICSEARCH_ADMIN_PASSWORD}
-      - ELASTICSEARCH_KIBANA_PASSWORD=${ELASTICSEARCH_KIBANA_PASSWORD}
-      - ELASTICSEARCH_DEV_USER=${ELASTICSEARCH_DEV_USER}
-      - ELASTICSEARCH_DEV_PASSWORD=${ELASTICSEARCH_DEV_PASSWORD}
     
     ulimits:
       memlock:
@@ -27,9 +16,10 @@ services:
     
     volumes:
       - ecom_elasticsearch_data:/usr/share/elasticsearch/data
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     
     ports:
-      - '9201:9200'  # Map to 9201 to avoid conflicts
+      - '9201:9200'
     
     networks:
       - ecom-network
