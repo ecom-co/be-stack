@@ -3,7 +3,7 @@
     "1": {
       "Name": "Ecommerce Database",
       "Group": "Servers",
-      "Host": "postgres",
+      "Host": "ecom-postgres",
       "Port": 5432,
       "MaintenanceDB": "ecommerce_db",
       "Username": "admin_ecom",

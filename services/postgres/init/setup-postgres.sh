@@ -37,8 +37,8 @@ validate_setup_complete() {
 run_custom_setup() {
     log "INFO" "Setting up PostgreSQL databases and users..."
     
-    # Create database
-    PGPASSWORD="$POSTGRES_PASSWORD" createdb -h localhost -U postgres "$POSTGRES_DB" 2>/dev/null || {
+    # Create database on the Postgres service using the configured bootstrap user
+    PGPASSWORD="$POSTGRES_PASSWORD" createdb -h ecom-postgres -p 5432 -U "$POSTGRES_USER" "$POSTGRES_DB" 2>/dev/null || {
         log "INFO" "Database $POSTGRES_DB already exists or creation failed"
     }
     

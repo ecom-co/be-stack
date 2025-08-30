@@ -19,7 +19,9 @@ services:
 
 volumes:
   ecom_pgadmin_data:
-    external: true
+    # Let the root compose manage this volume
+    # (avoid marking as external here to prevent conflicts)
+    
 
 networks:
   ecom-network:
