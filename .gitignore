@@ -101,7 +101,6 @@ Thumbs.db
 .dockerignore
 
 # Database dumps
-*.sql
 *.dump
 
 # Backup files
